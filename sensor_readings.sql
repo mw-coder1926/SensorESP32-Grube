@@ -10,7 +10,7 @@ create table if not exists public.sensor_readings (
 create index if not exists idx_sensor_data on public.sensor_readings using gin (data);
 create index if not exists idx_device_created on public.sensor_readings (device_id, created_at desc);
 
--- 3. Security policies
+-- 3. Security policies (check this later)
 alter table public.sensor_readings enable row level security;
 
 create policy "Allow public inserts"
