@@ -10,11 +10,19 @@ create table if not exists public.sensor_readings (
 create index if not exists idx_sensor_data on public.sensor_readings using gin (data);
 create index if not exists idx_device_created on public.sensor_readings (device_id, created_at desc);
 
--- 3. Security policies (check this later)
+-- 3. Security policies
 alter table public.sensor_readings enable row level security;
 
-create policy "Allow public inserts"
-on public.sensor_readings for insert to anon with check (true);
+create policy "Restrict inserts to authenticated devices"
+on public.sensor_readings
+for insert
+to authenticated
+with check (
+  -- Ensure the row's owner matches the logged-in user ID
+  (data->>'user_id') = auth.uid()::text
+  -- Optional: still validate payload schema shape
+  and data ? 'distance_cm'
+);
 
 create policy "Allow public read access"
 on public.sensor_readings for select to anon using (true);
