@@ -1,8 +1,12 @@
 -- =========================================================
 -- 1. Ensure extensions schema exists & move pg_net (Clears pg_net linter warning)
 -- =========================================================
+-- Create the extensions schema if it doesn't exist
 CREATE SCHEMA IF NOT EXISTS extensions;
-ALTER EXTENSION pg_net SET SCHEMA extensions;
+
+-- Drop pg_net from public schema and recreate it inside extensions
+DROP EXTENSION IF EXISTS pg_net CASCADE;
+CREATE EXTENSION pg_net SCHEMA extensions;
 
 -- =========================================================
 -- 2. Hardened Trigger Function (Clears Search Path & Security warnings)
