@@ -37,6 +37,7 @@ DECLARE
   v_from_email TEXT;
   v_threshold_cm NUMERIC;
   v_cooldown_minutes INT;
+  v_current_cm   NUMERIC;
 BEGIN
   -- Fetch threshold (defaults to 20 cm)
   SELECT COALESCE(value::numeric, 20) INTO v_threshold_cm
